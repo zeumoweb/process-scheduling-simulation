@@ -8,10 +8,10 @@ Each line within the input text will represent information about one job and it 
 
 Process Id : Arrival time : Burst time : Priority
 
-Example input: 
-13:0:17:1
-123:3:10:3
-4:1:20:2
+Example input:
+* 13:0:17:1
+* 123:3:10:3
+* 4:1:20:2
 
 Describes a simulation that has three jobs.
 
