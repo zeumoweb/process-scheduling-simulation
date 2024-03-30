@@ -17,7 +17,7 @@ void QueuePush(Queue* obj, int x) {
 }
 
 int QueuePop(Queue* obj) {
-    if(obj == NULL) return NULL;
+    if(obj == NULL) return -1;
     
     obj->cnt--;
     obj->head = (obj->head + 1)%100;
@@ -25,7 +25,7 @@ int QueuePop(Queue* obj) {
 }
 
 int QueuePeek(Queue* obj) {
-    if(obj == NULL) return 0;
+    if(obj == NULL) return -1;
     
     return obj->ar[obj->head];
 }

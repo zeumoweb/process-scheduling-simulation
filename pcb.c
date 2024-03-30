@@ -9,4 +9,6 @@ void initializePCB(PCB *process, int pid, int at, int bt, int priority) {
     process->completion_time = 0;
     process->turnaround_time = 0;
     process->waiting_time = 0;
+    process->remaining_time = bt;
+    process->response_time = 0;
 }

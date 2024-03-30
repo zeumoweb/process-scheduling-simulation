@@ -1,6 +1,7 @@
 #pragma once
 #include <stdlib.h>
-typedef struct{
+
+typedef struct {
     int *table;
 } HashMap;
 

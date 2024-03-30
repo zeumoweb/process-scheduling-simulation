@@ -8,7 +8,9 @@ typedef struct PCB {
     int completion_time;
     int turnaround_time;
     int waiting_time;
+    int remaining_time;
     int priority;
+    int response_time;
 } PCB;
 
 // Function to initialize a PCB instance
