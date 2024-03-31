@@ -36,13 +36,16 @@ int getNumLinesInFile(char *file_name)
 // Read Process from the text file and load them into memory
 PCB **process_input_file(char *file_name, HashMap *map)
 {
+    signal(SIGUSR1, handle_file_error);
+    signal(SIGSEGV, handle_segfault);
+    signal(SIGINT, handle_int);
     FILE *file = fopen(file_name, "r");
     int process_id, arrival_time, burst_time, priority;
     if (file == NULL)
     {
-        perror("Failed to open input file. Provide the right file path/name");
-        exit(1);
+        kill(getpid(), SIGUSR1);
     }
+
     char *line;
     size_t length;
 
@@ -52,8 +55,7 @@ PCB **process_input_file(char *file_name, HashMap *map)
 
     if (pcb_table == NULL)
     {
-        perror("Failed to allocate memory for PCB table");
-        exit(1);
+        kill(getpid(), SIGSEGV);
     }
 
     for (int i = 0; i < num_tasks; i++)
@@ -61,8 +63,7 @@ PCB **process_input_file(char *file_name, HashMap *map)
         pcb_table[i] = (PCB *)malloc(sizeof(PCB));
         if (pcb_table[i] == NULL)
         {
-            perror("Failed to allocate memory for PCB");
-            exit(1);
+            kill(getpid(), SIGSEGV);
         }
     }
 

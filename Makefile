@@ -1,4 +1,4 @@
-SRC = fcfs_policy.c hashmap.c pcb.c mlfq_policy.c queue.c utility_functions.c round_robin_policy.c scheduler.c 
+SRC = fcfs_policy.c hashmap.c error_handler.c pcb.c mlfq_policy.c queue.c utility_functions.c round_robin_policy.c scheduler.c 
 CC = gcc
 OBJ = $(SRC:.c=.o)
 EXEC = program

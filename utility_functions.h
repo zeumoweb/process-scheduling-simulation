@@ -5,6 +5,7 @@
 #include "pcb.h"
 #include "hashmap.h"
 #include <time.h>
+#include "error_handler.h"
 
 void splitLine(char *line, int *num1, int *num2, int *num3, int *num4);
 int getNumLinesInFile(char* file_name);
