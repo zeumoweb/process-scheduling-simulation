@@ -20,17 +20,19 @@ PCB** round_robin_scheduler(char* filename, int quantum) {
             QueuePush(ready_queue, pcb_table[current_task]->process_id);
             clock = pcb_table[current_task]->arrival_time;
             current_task ++;
-        } else {
-            if (current_task < num_tasks && pcb_table[current_task]->arrival_time <= clock){
+
+        } 
+        while (current_task < num_tasks && pcb_table[current_task]->arrival_time <= clock){
                 QueuePush(ready_queue, pcb_table[current_task]->process_id);
                 current_task ++;
             }
-        }
+        
 
         // Chose the next task to be executed from the ready queue
-        int current_task = QueuePop(ready_queue);
-        int task_index = HashMapGet(map, current_task);
-        PCB* process = pcb_table[task_index];
+        int proccess_id = QueuePop(ready_queue);
+        int process_index = HashMapGet(map, proccess_id);
+
+        PCB* process = pcb_table[process_index];
 
         if (process->remaining_time == process->burst_time) {
             process->response_time += clock - process->arrival_time;
@@ -45,12 +47,14 @@ PCB** round_robin_scheduler(char* filename, int quantum) {
         if (process->remaining_time <= 0) {
             process->completion_time = clock;
             process->turnaround_time = process->completion_time - process->arrival_time;
-            process->waiting_time = process->turnaround_time - process->burst_time;
+            process->waiting_time =process->completion_time - process->burst_time - process->arrival_time;
 
     
         } else {
             QueuePush(ready_queue, process->process_id);
         }
+
+        printf("Queue Size: %d\n", QueueSize(ready_queue));
     }
     QueueFree(ready_queue);
     HashMapFree(map);

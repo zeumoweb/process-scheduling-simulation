@@ -1,3 +1,7 @@
+#pragma once
 #include "pcb.h"
+#include "utility_functions.h"
+#include "hashmap.h"
+#include "queue.h"
 
-void fcfs_scheduler(PCB *pcb_table, int *process_ids);
+PCB** fcfs_scheduler(char* filename);

@@ -3,7 +3,7 @@
 #include <stdlib.h>
 
 typedef struct {
-    int ar[100];
+    int ar[10000];
     int head;
     int tail;
     int cnt;
@@ -20,3 +20,6 @@ int QueuePeek(Queue* obj);
 int QueueEmpty(Queue* obj);
 
 void QueueFree(Queue* obj);
+
+
+int QueueSize(Queue* obj) ;

@@ -120,6 +120,7 @@ void printStatistics(PCB **pcb_table, int num_tasks, char *policy)
     printf("Average Waiting Time: %.2f\n", (float)total_waiting_time / num_tasks);
     printf("Average Turnaround Time: %.2f\n", (float)total_turnaround_time / num_tasks);
     printf("Average Response Time: %.2f\n", (float)total_response_time / num_tasks);
+    printf("Average Completion Time: %.2f\n", (float)total_completion_time / num_tasks);
 }
 
 int IO_request()

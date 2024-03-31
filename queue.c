@@ -13,15 +13,16 @@ void QueuePush(Queue* obj, int x) {
     if(obj == NULL) return;
     obj->cnt++;
     obj->ar[obj->tail] = x;
-    obj->tail = (obj->tail + 1)%100;
+    obj->tail = (obj->tail + 1)%10000;
 }
 
 int QueuePop(Queue* obj) {
     if(obj == NULL) return -1;
     
     obj->cnt--;
-    obj->head = (obj->head + 1)%100;
-    return (obj->ar[(obj->head-1)%100]);
+    int prev_head = obj->head;
+    obj->head = (obj->head + 1)%10000;
+    return (obj->ar[(prev_head)%10000]);
 }
 
 int QueuePeek(Queue* obj) {
@@ -34,6 +35,12 @@ int QueueEmpty(Queue* obj) {
     if(obj == NULL) return 0;
     
     return (obj->cnt ? 0 : 1);
+}
+
+
+int QueueSize(Queue* obj) {
+    if(obj == NULL) return 0;
+    return obj->cnt;
 }
 
 void QueueFree(Queue* obj) {

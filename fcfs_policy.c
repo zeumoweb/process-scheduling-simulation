@@ -1,26 +1,29 @@
-// #include "pcb.h"
+#include "fcfs_policy.h"
 
-// /*
-//  Update the PCB of each process with the corresponding waiting time, turn around time, and completion time
-//  When scheduling the processes/Jobs with first come first serve algorithm.
+PCB **fcfs_scheduler(char *filename)
+{
 
-//  process_ids contains the list of process id in the order in which they arrived in the ready queue.
-// */
-// void fcfs_scheduler(PCB *pcb_table, int *process_ids)
-// {
-//  int num_processes = sizeof(process_ids)/sizeof(process_ids[0]);
-//  for (int i = 0; i < num_processes; i++){
-//     int pid = process_ids[i];
-//     pcb_table[pid].waiting_time = pcb_table[pid].burst_time;
+   int clock = 0; // Initialize Clock
 
-//     // CT = BT + CT of previous process
-//     pcb_table[pid].completion_time = pcb_table[pid].burst_time + pcb_table[(pid > 0) ? pid - 1 : 0].completion_time;
+   HashMap *map = HashMapCreate();     // Maps the process id to the index in the pcb_table
+   PCB **pcb_table = process_input_file(filename, map); // Load the tasks into memory
+   int num_tasks = getNumLinesInFile(filename);         // Get the number of tasks in the file
 
-//     // TAT = CT - AT
-//     pcb_table[pid].turnaround_time = pcb_table[pid].completion_time - pcb_table[pid].arrival_time;
+   for (int i = 0; i < num_tasks; i++)
+   {
+      PCB *process = pcb_table[i];
+      if (process->arrival_time > clock)
+      {
+         clock = process->arrival_time;
+      }
+      process->response_time += clock - process->arrival_time;
+      process->remaining_time -= process->burst_time;
+      clock += process->burst_time;
 
-//     // WT = TAT - BT
-//     pcb_table[pid].waiting_time = pcb_table[pid].turnaround_time - pcb_table[pid].burst_time;
-//  }   
+      process->completion_time = clock;
+      process->turnaround_time = process->completion_time - process->arrival_time;
+      process->waiting_time = process->completion_time - process->burst_time - process->arrival_time;
+   }
 
-// }
+   return pcb_table;
+}
