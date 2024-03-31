@@ -9,8 +9,8 @@ PCB** round_robin_scheduler(char* filename, int quantum) {
 
     PCB** pcb_table = process_input_file(filename, map); // Load the tasks into memory
     int num_tasks = getNumLinesInFile(filename); // Get the number of tasks in the file
-   
-    // while (num_tasks > 0 || QueueEmpty(ready_queue) == 0) {
+    bubble_sort(pcb_table, num_tasks, map); // Sort the tasks based on arrival time and process ID
+
     int current_task = 0; 
     while (current_task < num_tasks || QueueEmpty(ready_queue) == 0) {
 

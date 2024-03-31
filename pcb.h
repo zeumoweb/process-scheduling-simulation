@@ -1,4 +1,5 @@
 #pragma once
+#include "hashmap.h"
 
 // Define the Process Control Block structure
 typedef struct PCB {
@@ -11,7 +12,14 @@ typedef struct PCB {
     int remaining_time;
     int priority;
     int response_time;
+    int current_allotment; // Needed for MLFQ
 } PCB;
 
 // Function to initialize a PCB instance
 void initializePCB(PCB *process, int pid, int at, int bt, int priority);
+
+// Comparison function for qsort
+int compare(const void *a, const void *b);
+
+// Bubble sort function
+void bubble_sort(PCB **arr, int n, HashMap* map);
