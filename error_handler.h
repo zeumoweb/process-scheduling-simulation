@@ -7,3 +7,4 @@
 void handle_segfault(int sig);
 void handle_int(int sig);
 void handle_file_error(int sig);
+void handle_heap_full(int sig);
