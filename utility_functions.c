@@ -23,10 +23,12 @@ void splitLine(char *line, int *num1, int *num2, int *num3, int *num4)
 int getNumLinesInFile(char *file_name)
 {
     FILE *file = fopen(file_name, "r");
-    char *line;
+    char line[20];
     size_t length;
+    int n = 20;
     int num_tasks = 0;
-    while ((line = fgetln(file, &length)))
+    int i;
+    while ((i = fgets(line, n, file)))
     {
         num_tasks++;
     }
@@ -46,13 +48,14 @@ PCB **process_input_file(char *file_name, HashMap *map)
         kill(getpid(), SIGUSR1);
     }
 
-    char *line;
+    char line[23];
     size_t length;
 
     int num_tasks = getNumLinesInFile(file_name);
     int process_ids[num_tasks];
+    
     PCB **pcb_table = (PCB **)malloc(sizeof(PCB *) * num_tasks);
-
+    
     if (pcb_table == NULL)
     {
         kill(getpid(), SIGSEGV);
@@ -66,9 +69,9 @@ PCB **process_input_file(char *file_name, HashMap *map)
             kill(getpid(), SIGSEGV);
         }
     }
-
     int i = 0;
-    while ((line = fgetln(file, &length)))
+    int j;
+    while ((j = fgets(line, 23, file)))
     {
         line[strcspn(line, "\n")] = '\0';
         splitLine(line, &process_id, &arrival_time, &burst_time, &priority);
