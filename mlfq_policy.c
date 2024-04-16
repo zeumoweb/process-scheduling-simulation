@@ -2,7 +2,11 @@
 
 #define MAX_ALLOTMENT_TIME 5 // Time quantum for each priority level
 #define MAX_PRIORITY 5       // Number of priority levels
-#define AGING_THRESHOLD 10   // Number of clock cycles before all processes are promoted back to the topmost priority level
+#define AGING_THRESHOLD 10   // Number of global_clock cycles before all processes are promoted back to the topmost priority level
+
+pid_t main_process_id;
+int global_clock = 0; // global_clock
+
 
 int isAllProcessesDone(PCB **pcb_table, int num_tasks)
 {
@@ -31,6 +35,7 @@ void promoteAllProcesses(Queue **queues, PCB **pcb_table, HashMap *map){
         }
 }
 
+
 int getPriorityOfNextQueue(Queue **queues)
 {
     int priority = -1;
@@ -47,7 +52,10 @@ int getPriorityOfNextQueue(Queue **queues)
 
 PCB** mlfq_scheduler(char *filename, int quantum)
 {
-    int clock = 0;                                                     // Initialize Clock
+
+    signal(SIGUSR1, execute_process);
+    signal(SIGUSR2, execute_process);
+    main_process_id = getpid();
     HashMap *map = HashMapCreate();                                    // Maps the process id to the index in the pcb_table
     Queue **queues = (Queue **)malloc(MAX_PRIORITY * sizeof(Queue *)); // Initialize the priority queues
     for (int i = 0; i < MAX_PRIORITY; i++)
@@ -78,18 +86,30 @@ PCB** mlfq_scheduler(char *filename, int quantum)
         }
 
         // Check all the processes that have arrived and add them to the topmost priority queue
-        while (current_task < num_tasks && pcb_table[current_task]->arrival_time <= clock)
+        while (current_task < num_tasks && pcb_table[current_task]->arrival_time <= global_clock)
         {
-            pcb_table[current_task]->priority = 0;
-            QueuePush(queues[0], pcb_table[current_task]->process_id);
-            current_task++;
+            pid_t pid = fork();
+            if (pid == 0 ){
+                // child process
+                kill(getpid(), SIGUSR1);
+            } else {
+                pcb_table[current_task]->priority = 0;
+                    pcb_table[current_task]->process_id = pid;
+                    QueuePush(queues[0], pcb_table[current_task]->process_id);
+                    HashMapPut(map, pcb_table[current_task]->process_id, current_task); // Maps the process id to the index in the pcb_table
+                    current_task++;
+            }
+            
         }
 
+        if (getpid() == main_process_id)
+        {
+          
         // Choose the next queue to run
         int priority = getPriorityOfNextQueue(queues);
         if (priority == -1)
         {
-            clock += 1;
+            global_clock += 1;
             continue;
         }
 
@@ -105,19 +125,20 @@ PCB** mlfq_scheduler(char *filename, int quantum)
             {
                 process->remaining_time -= 1;
                 process->current_allotment += 1;
-                clock += 1;
+                global_clock += 1;
 
-                if (IO_request() == 1){
-                    // Current Process Perform and IO Request
-                    QueuePush(input_output_queue, process->process_id);
-                    break;
-                }
+                // if (IO_request() == 1){
+                //     // Current Process Perform and IO Request
+                //     QueuePush(input_output_queue, process->process_id);
+                //     break;
+                // }
                 
                 if (process->remaining_time <= 0)
                 {
                     // Process has finished executing
+                    kill(process->process_id, SIGUSR2);
                     QueuePop(queues[priority]);
-                    process->completion_time = clock;
+                    process->completion_time = global_clock;
                     process->turnaround_time = process->completion_time - process->arrival_time;
                     process->waiting_time = process->completion_time - process->burst_time - process->arrival_time;
                     break;
@@ -148,11 +169,11 @@ PCB** mlfq_scheduler(char *filename, int quantum)
         } // End Round Robin Round
     
     // After some time period, move all the process back to the topmost priority level to avoid starvation
-    if (clock % AGING_THRESHOLD == 0)
+    if (global_clock % AGING_THRESHOLD == 0)
     {
         promoteAllProcesses(queues, pcb_table, map);
     }
-    }
+    }} // End While Loop
 
     // Free All Queues
     for (int i = 0; i < MAX_PRIORITY; i++)

@@ -2,6 +2,23 @@
 #define CHANCE_OF_IO_REQUEST 10
 #define CHANCE_OF_IO_COMPLETE 4
 
+void execute_process(int sig) {
+    if (sig == SIGUSR1) {
+        // printf("Process %d is executing at time %d\n", getpid(), global_clock);
+        // fflush(stdout);
+        while(1){
+            // putting the process in waiting state.  (Process is ready but not running)
+            continue;
+        }
+    } if (sig == SIGUSR2) {
+        // printf("Process %d Completed Execution at time %d\n", getpid(), global_clock);
+        // fflush(stdout);
+        exit(0);
+    } 
+    
+} 
+
+
 void splitLine(char *line, int *num1, int *num2, int *num3, int *num4)
 {
     // Using strtok to split the line at ":"
@@ -23,12 +40,12 @@ void splitLine(char *line, int *num1, int *num2, int *num3, int *num4)
 int getNumLinesInFile(char *file_name)
 {
     FILE *file = fopen(file_name, "r");
-    char line[20];
+    char line[23];
     size_t length;
-    int n = 20;
+    int n = 23;
     int num_tasks = 0;
-    int i;
-    while ((i = fgets(line, n, file)))
+    char* i;
+    while ((i = fgets(line, n, file)) != NULL)
     {
         num_tasks++;
     }
@@ -38,9 +55,9 @@ int getNumLinesInFile(char *file_name)
 // Read Process from the text file and load them into memory
 PCB **process_input_file(char *file_name, HashMap *map)
 {
-    signal(SIGUSR1, handle_file_error);
+    // signal(SIGUSR1, handle_file_error);
     signal(SIGSEGV, handle_segfault);
-    signal(SIGINT, handle_int);
+    // signal(SIGINT, handle_int);
     FILE *file = fopen(file_name, "r");
     int process_id, arrival_time, burst_time, priority;
     if (file == NULL)
@@ -70,13 +87,11 @@ PCB **process_input_file(char *file_name, HashMap *map)
         }
     }
     int i = 0;
-    int j;
-    while ((j = fgets(line, 23, file)))
+    while ((fgets(line, 23, file)))
     {
         line[strcspn(line, "\n")] = '\0';
         splitLine(line, &process_id, &arrival_time, &burst_time, &priority);
         initializePCB(pcb_table[i], process_id, arrival_time, burst_time, priority);
-        HashMapPut(map, process_id, i); // Maps the process id to the index in the pcb_table
         i++;
     }
 

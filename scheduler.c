@@ -32,6 +32,7 @@ int main(int argc, char** argv){
     // PCB** tasks = round_robin_scheduler("jobs_data2.txt", 1);
    PCB** tasks =  mlfq_scheduler("jobs_data2.txt", 5);
     printStatistics(tasks, num_tasks, "round robin");
+    printf("Done %d \n", num_tasks);
     
     return 0;
 }
