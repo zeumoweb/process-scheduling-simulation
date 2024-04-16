@@ -35,12 +35,12 @@ test6() {
 
 
 test7() {
-    echo -e "\nRunning Test 5: Jobs Data 1 and Multi-Level Queue..."
+    echo -e "\nRunning Test 7: Jobs Data 1 and Multi-Level Queue..."
     ./program jobs_data1.txt 4 5
 }
 
 test8() {
-    echo -e "\nRunning Test 6: Jobs Data 2 and Multi-Level Queue.."
+    echo -e "\nRunning Test 8: Jobs Data 2 and Multi-Level Queue.."
     ./program jobs_data2.txt 4 5
 }
 # Main function to select and run tests

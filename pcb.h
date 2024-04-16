@@ -19,7 +19,7 @@ typedef struct PCB {
 int isAllProcessesDone(PCB **pcb_table, int num_tasks);
 
 // Function to initialize a PCB instance
-void initializePCB(PCB *process, int pid, int at, int bt, int priority);
+void initializePCB(PCB *process, int at, int bt);
 
 // Comparison function for qsort
 int compare(const void *a, const void *b);

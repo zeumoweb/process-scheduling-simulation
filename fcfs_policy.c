@@ -6,7 +6,7 @@ PCB **fcfs_scheduler(char *filename)
    int clock = 0; // Initialize Clock
 
    HashMap *map = HashMapCreate();     // Maps the process id to the index in the pcb_table
-   PCB **pcb_table = process_input_file(filename, map); // Load the tasks into memory
+   PCB **pcb_table = process_input_file(filename); // Load the tasks into memory
    int num_tasks = getNumLinesInFile(filename);         // Get the number of tasks in the file
 
    bubble_sort(pcb_table, num_tasks, map); // Sort the tasks based on arrival time and process ID

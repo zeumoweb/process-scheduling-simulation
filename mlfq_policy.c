@@ -47,7 +47,7 @@ PCB** mlfq_scheduler(char *filename, int quantum)
         queues[i] = QueueCreate();
     }
 
-    PCB **pcb_table = process_input_file(filename, map); // Load the tasks into memory
+    PCB **pcb_table = process_input_file(filename); // Load the tasks into memory
     int num_tasks = getNumLinesInFile(filename);         // Get the number of tasks in the file
     Queue *input_output_queue = QueueCreate();           // Initialize the input/output queue
 

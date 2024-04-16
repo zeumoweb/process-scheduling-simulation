@@ -31,7 +31,7 @@ void handle_error(int sig) {
 }
 
 
-void splitLine(char *line, int *num1, int *num2, int *num3, int *num4)
+void splitLine(char *line, int *num1, int *num2)
 {
     // Using strtok to split the line at ":"
     char *token = strtok(line, ":");
@@ -41,12 +41,6 @@ void splitLine(char *line, int *num1, int *num2, int *num3, int *num4)
 
     token = strtok(NULL, ":");
     *num2 = atoi(token);
-
-    token = strtok(NULL, ":");
-    *num3 = atoi(token);
-
-    token = strtok(NULL, ":");
-    *num4 = atoi(token);
 }
 
 int getNumLinesInFile(char *file_name)
@@ -65,7 +59,7 @@ int getNumLinesInFile(char *file_name)
 }
 
 // Read Process from the text file and load them into memory
-PCB **process_input_file(char *file_name, HashMap *map)
+PCB **process_input_file(char *file_name)
 {
     // signal(SIGUSR1, handle_file_error);
     signal(SIGSEGV, handle_segfault);
@@ -102,8 +96,8 @@ PCB **process_input_file(char *file_name, HashMap *map)
     while ((fgets(line, 23, file)))
     {
         line[strcspn(line, "\n")] = '\0';
-        splitLine(line, &process_id, &arrival_time, &burst_time, &priority);
-        initializePCB(pcb_table[i], process_id, arrival_time, burst_time, priority);
+        splitLine(line, &arrival_time, &burst_time);
+        initializePCB(pcb_table[i], arrival_time, burst_time);
         i++;
     }
 

@@ -17,7 +17,7 @@ int main(int argc, char** argv){
     signal(SIGUSR2, execute_process);
     char* job_data_file = argv[1];
     int scheduling_policy = atoi(argv[2]);
-    int num_tasks = getNumLinesInFile("jobs_data1.txt");
+    int num_tasks = getNumLinesInFile(job_data_file);
     if (scheduling_policy == 1){
         PCB** tasks = fcfs_scheduler(job_data_file);
         printStatistics(tasks, num_tasks, "fcfs");
@@ -25,21 +25,20 @@ int main(int argc, char** argv){
     else if (scheduling_policy == 2){
         int quantum = atoi(argv[3]);
         PCB** tasks = round_robin_scheduler(job_data_file, quantum);
-        printStatistics(tasks, num_tasks, "round robin");
+        printStatistics(tasks, num_tasks, "Round Robin");
     }
     else if (scheduling_policy == 3){
         PCB** tasks = sjf_preemptive(job_data_file);
-        printStatistics(tasks, num_tasks, "sjf preemptive");
+        printStatistics(tasks, num_tasks, "Shortest Job First Preemptive");
     }
     else if (scheduling_policy == 4){
         int time_quantum = atoi(argv[3]);
         PCB** tasks = mlfq_scheduler(job_data_file, time_quantum);
-        printStatistics(tasks, num_tasks, "mlfq");
+        printStatistics(tasks, num_tasks, "Multilevel Feedback Queue Preemptive");
     }
     else{
         printf("Invalid scheduling policy\n");
     }
 
-    printf("Exiting... Simulation Completed\n\n");
     return 0;
 }

@@ -2,11 +2,11 @@
 
 ## Input Format
 
-The input format for the simulator is a text file which contains information about each process. The information include the process ID, Arrival Time, Burst Time, and Priority. Priority will be ignored for scheduler policies such as Round Robins and First Come First Served since they don't utilize process priority during scheduling.
+The input format for the simulator is a text file which contains information about each process. The information include the Arrival Time and Burst Time. 
 
 Each line within the input text will represent information about one job and it will follow the following format:
 
-Process Id : Arrival time : Burst time : Priority
+Arrival time : Burst time
 
 Example input:
 * 13:0:17:1

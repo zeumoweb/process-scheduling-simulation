@@ -8,7 +8,7 @@ PCB **sjf_preemptive(char *filename)
     main_process_id_sjf = getpid();
 
     HashMap *map = HashMapCreate();                      // Maps the process id to the index in the pcb_table
-    PCB **pcb_table = process_input_file(filename, map); // Load the tasks into memory
+    PCB **pcb_table = process_input_file(filename); // Load the tasks into memory
     int num_tasks = getNumLinesInFile(filename);         // Get the number of tasks in the file
 
     MinHeap *minHeap = createMinHeap(num_tasks); // Initialize the min heap
