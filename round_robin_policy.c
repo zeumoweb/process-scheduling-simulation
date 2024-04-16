@@ -8,8 +8,6 @@ int global_clock_rr = 0; // clock
 PCB** round_robin_scheduler(char* filename, int quantum) {
 
     main_process_id_rr = getpid();
-    signal(SIGUSR1, execute_process);
-    signal(SIGUSR2, execute_process);
 
     HashMap* map = HashMapCreate(); // Maps the process id to the index in the pcb_table
     Queue* ready_queue = QueueCreate(); // Initialize the ready queue

@@ -5,8 +5,6 @@ int global_clock_sjf = 0; // global_clock_
 
 PCB **sjf_preemptive(char *filename)
 {
-    signal(SIGUSR1, execute_process);
-    signal(SIGUSR2, execute_process);
     main_process_id_sjf = getpid();
 
     HashMap *map = HashMapCreate();                      // Maps the process id to the index in the pcb_table

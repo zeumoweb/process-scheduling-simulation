@@ -39,9 +39,6 @@ int getPriorityOfNextQueue(Queue **queues)
 
 PCB** mlfq_scheduler(char *filename, int quantum)
 {
-
-    signal(SIGUSR1, execute_process);
-    signal(SIGUSR2, execute_process);
     main_process_id = getpid();
     HashMap *map = HashMapCreate();                                    // Maps the process id to the index in the pcb_table
     Queue **queues = (Queue **)malloc(MAX_PRIORITY * sizeof(Queue *)); // Initialize the priority queues
