@@ -1,5 +1,19 @@
 #include "pcb.h"
 
+// Function to check if all processes are done
+int isAllProcessesDone(PCB **pcb_table, int num_tasks)
+{
+    for (int i = 0; i < num_tasks; i++)
+    {
+        if (pcb_table[i]->remaining_time > 0)
+        {
+            return 0;
+        }
+    }
+    return 1;
+}
+
+
 // Function to initialize a PCB instance
 void initializePCB(PCB *process, int pid, int at, int bt, int priority) {
     process->process_id = pid;

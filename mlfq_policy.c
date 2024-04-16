@@ -8,19 +8,6 @@ pid_t main_process_id;
 int global_clock = 0; // global_clock
 
 
-int isAllProcessesDone(PCB **pcb_table, int num_tasks)
-{
-    for (int i = 0; i < num_tasks; i++)
-    {
-        if (pcb_table[i]->remaining_time > 0)
-        {
-            return 0;
-        }
-    }
-    return 1;
-}
-
-
 void promoteAllProcesses(Queue **queues, PCB **pcb_table, HashMap *map){
     for (int i = 1; i < MAX_PRIORITY; i++)
         {
@@ -85,7 +72,7 @@ PCB** mlfq_scheduler(char *filename, int quantum)
             }
         }
 
-        // Check all the processes that have arrived and add them to the topmost priority queue
+        // Check all the processes that have arrived and add them to the topmost  queue
         while (current_task < num_tasks && pcb_table[current_task]->arrival_time <= global_clock)
         {
             pid_t pid = fork();

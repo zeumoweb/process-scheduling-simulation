@@ -15,6 +15,9 @@ typedef struct PCB {
     int current_allotment; // Needed for MLFQ
 } PCB;
 
+// Function to check if all processes are done
+int isAllProcessesDone(PCB **pcb_table, int num_tasks);
+
 // Function to initialize a PCB instance
 void initializePCB(PCB *process, int pid, int at, int bt, int priority);
 

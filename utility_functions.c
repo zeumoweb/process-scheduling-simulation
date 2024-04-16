@@ -107,9 +107,9 @@ void printStatistics(PCB **pcb_table, int num_tasks, char *policy)
     int longest = 0;
     int shortest = INT16_MAX;
     printf("\n");
-    printf("+-------+-----------------+-----------------+-------------+------------------+---------------------+--------------------+----------------------+ \n");
-    printf("| Job#  | Arrival Time    | Burst Time      | Priority    | Waiting Time     | Turnaround Time     | Response Time    | Completion Time        | \n");
-    printf("+-------+-----------------+-----------------+-------------+------------------+---------------------+--------------------+----------------------+ \n");
+    printf("+--------+-----------------+-----------------+-------------+------------------+---------------------+--------------------+----------------------+ \n");
+    printf("| Job#   | Arrival Time    | Burst Time      | Priority    | Waiting Time     | Turnaround Time     | Response Time    | Completion Time        | \n");
+    printf("+--------+-----------------+-----------------+-------------+------------------+---------------------+--------------------+----------------------+ \n");
 
     for (int i = 0; i < num_tasks; i++)
     {
