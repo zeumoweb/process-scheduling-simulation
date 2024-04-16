@@ -14,4 +14,5 @@ PCB** process_input_file(char* file_name, HashMap* map);
 void printStatistics(PCB** pcb_table, int num_tasks, char* policy_name);
 int IO_request();
 int IO_complete();
+void handle_error(int sig);
 void execute_process(int sig);

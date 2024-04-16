@@ -1,13 +1,13 @@
 #include "sjf_preemptive.h"
 
-pid_t main_process_id;
+pid_t main_process_id_sjf;
 int global_clock_sjf = 0; // global_clock_
 
 PCB **sjf_preemptive(char *filename)
 {
     signal(SIGUSR1, execute_process);
     signal(SIGUSR2, execute_process);
-    main_process_id = getpid();
+    main_process_id_sjf = getpid();
 
     HashMap *map = HashMapCreate();                      // Maps the process id to the index in the pcb_table
     PCB **pcb_table = process_input_file(filename, map); // Load the tasks into memory
@@ -39,7 +39,7 @@ PCB **sjf_preemptive(char *filename)
             }
         }
 
-        if (getpid() == main_process_id)
+        if (getpid() == main_process_id_sjf)
         {
 
             if (minHeap->size == 0)

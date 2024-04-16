@@ -18,6 +18,18 @@ void execute_process(int sig) {
     
 } 
 
+void handle_error(int sig) {
+    if (sig == SIGINT) {
+        printf("Error: File not found\n");
+        exit(0);
+    }
+
+    if (sig == SIGSEGV) {
+        printf("Error: Memory Allocation Failed\n");
+        exit(0);
+    }
+}
+
 
 void splitLine(char *line, int *num1, int *num2, int *num3, int *num4)
 {
@@ -62,7 +74,7 @@ PCB **process_input_file(char *file_name, HashMap *map)
     int process_id, arrival_time, burst_time, priority;
     if (file == NULL)
     {
-        kill(getpid(), SIGUSR1);
+        kill(getpid(), SIGINT);
     }
 
     char line[23];

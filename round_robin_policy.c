@@ -1,13 +1,13 @@
 #include "round_robin_policy.h"
 
-pid_t main_process_id;
+pid_t main_process_id_rr;
 int global_clock_rr = 0; // clock
 
   
 
 PCB** round_robin_scheduler(char* filename, int quantum) {
 
-    main_process_id = getpid();
+    main_process_id_rr = getpid();
     signal(SIGUSR1, execute_process);
     signal(SIGUSR2, execute_process);
 
@@ -37,7 +37,7 @@ PCB** round_robin_scheduler(char* filename, int quantum) {
             current_task ++;
             }
         }
-        if (getpid() == main_process_id) {
+        if (getpid() == main_process_id_rr) {
 
         
         if (QueueEmpty(ready_queue) == 1) {
