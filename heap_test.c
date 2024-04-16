@@ -30,12 +30,15 @@ int verifyMinHeapProperty(Heap *heap, int index) {
 // Main function to test heap operations
 int main() {
     Heap *heap = HeapCreate(10);
-    PCB pcb1 = {1, 0, 10, 0, 0, 0, 0, 10}; // process_id, arrival_time, burst_time, priority...
-    PCB pcb2 = {2, 0, 5, 0, 0, 0, 0, 5};
-    PCB pcb3 = {3, 0, 3, 0, 0, 0, 0, 3};
+    PCB pcb1 = {1, 0, 10, 0, 110, 0, 0, 10}; // process_id, arrival_time, burst_time, priority...
+    PCB pcb2 = {2, 0, 5, 0, 20, 0, 0, 5};
+    PCB pcb3 = {3, 0, 3, 0, 10, 0, 0, 3};
 
+    printf("Inserting PCB with ID: %d, Remaining Time: %d\n", pcb1.process_id, pcb1.remaining_time);
     HeapInsert(heap, &pcb1);
+    printf("Inserting PCB with ID: %d, Remaining Time: %d\n", pcb2.process_id, pcb2.remaining_time);
     HeapInsert(heap, &pcb2);
+    printf("Inserting PCB with ID: %d, Remaining Time: %d\n", pcb3.process_id, pcb3.remaining_time);
     HeapInsert(heap, &pcb3);
 
     printHeap(heap); // Print heap content to visualize
