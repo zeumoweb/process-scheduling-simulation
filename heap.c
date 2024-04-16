@@ -1,93 +1,102 @@
 #include "heap.h"
+#include <stdbool.h>
+#include <string.h>  // For memcpy
 
 Heap* HeapCreate(int capacity) {
     Heap* heap = malloc(sizeof(Heap));
-    heap->data = malloc(capacity * sizeof(int));
+    if (!heap) return NULL; // Always good to check for malloc failure
+    heap->data = malloc(capacity * sizeof(PCB*)); // Allocate space for PCB pointers
+    if (!heap->data) { // Check for malloc failure
+        free(heap);
+        return NULL;
+    }
     heap->size = 0;
     heap->capacity = capacity;
     return heap;
 }
 
-void HeapInsert(Heap* heap, int value) {
-    // First, make sure the heap has room for a new element
-    if (heap->size == heap->capacity) {  
-        // Heap is full
-        handle_heap_full(1);
-        return;
+// Function to get the PCB with the minimum value from the heap
+PCB* HeapGetMin(Heap* heap) {
+    if (heap->size == 0) {
+        return NULL; // Heap is empty, return NULL
+    }
+    return heap->data[0]; // Return the root element of the heap, which is the minimum
+}
+
+
+
+void HeapInsert(Heap* heap, PCB* pcb) {
+    if (heap->size == heap->capacity) {
+        // Need to resize the heap to accommodate more elements
+        int newCapacity = heap->capacity * 2;  // Double the capacity
+        PCB** newData = malloc(newCapacity * sizeof(PCB*));  // Allocate new, larger array
+        if (newData == NULL) {
+            // Handle allocation failure; could return an error code or exit
+            fprintf(stderr, "Failed to allocate memory for heap resize.\n");
+            exit(EXIT_FAILURE);
+        }
+        memcpy(newData, heap->data, heap->capacity * sizeof(PCB*));  // Copy existing data to new array
+        free(heap->data);  // Free the old array
+        heap->data = newData;  // Assign the new array to the heap
+        heap->capacity = newCapacity;  // Update the capacity
     }
 
-    // Insert the new value at the end of the heap
-    heap->data[heap->size] = value;
-
-    // Move the new value up the heap until it's in the correct position
-    int i = heap->size;
-    while (i != 0 && heap->data[i] < heap->data[(i - 1) / 2]) {
-        // Swap the new value with its parent
-        int temp = heap->data[i];
-        heap->data[i] = heap->data[(i - 1) / 2];
-        heap->data[(i - 1) / 2] = temp;
-
-        // Move to the parent's position
-        i = (i - 1) / 2;
+    // Proceed with the standard insertion process
+    heap->data[heap->size] = pcb;
+    int childIndex = heap->size;
+    int parentIndex = (childIndex - 1) / 2;
+    while (childIndex > 0 && heap->data[childIndex]->remaining_time < heap->data[parentIndex]->remaining_time) {
+        // Swap child and parent
+        PCB* temp = heap->data[childIndex];
+        heap->data[childIndex] = heap->data[parentIndex];
+        heap->data[parentIndex] = temp;
+        childIndex = parentIndex;
+        parentIndex = (childIndex - 1) / 2;
     }
-
-    // Increment the size of the heap
+    
     heap->size++;
 }
 
-int HeapGetMin(Heap* heap) {
-    if (heap->size == 0) {
-        // Heap is empty
-        return -1;
-    }
 
-    // Return the root of the heap
-    return heap->data[0];
-}
 
 void HeapRemoveMin(Heap* heap) {
     if (heap->size == 0) {
-        // Heap is empty
         return;
     }
-
-    // Move the last element in the heap to the root
+    // Move the last element to the root
     heap->data[0] = heap->data[heap->size - 1];
-
-    // Decrement the size of the heap
     heap->size--;
 
-    // Move the new root down the heap until it's in the correct position
-    int i = 0;
-    while (1) {
-        int leftChild = 2 * i + 1;
-        int rightChild = 2 * i + 2;
+    // Re-heapify down from the root
+    int currentIndex = 0;
+    while (true) {
+        int smallest = currentIndex;
+        int leftChild = 2 * currentIndex + 1;
+        int rightChild = 2 * currentIndex + 2;
 
-        // Find the smallest child
-        int smallest = i;
-        if (leftChild < heap->size && heap->data[leftChild] < heap->data[smallest]) {
+        if (leftChild < heap->size && heap->data[leftChild]->remaining_time < heap->data[smallest]->remaining_time) {
             smallest = leftChild;
         }
-        if (rightChild < heap->size && heap->data[rightChild] < heap->data[smallest]) {
+        if (rightChild < heap->size && heap->data[rightChild]->remaining_time < heap->data[smallest]->remaining_time) {
             smallest = rightChild;
         }
 
-        // If the smallest child is the parent, the heap property is restored
-        if (smallest == i) {
+        if (smallest == currentIndex) {
             break;
         }
 
-        // Swap the parent with the smallest child
-        int temp = heap->data[i];
-        heap->data[i] = heap->data[smallest];
+        // Swap the current node with the smallest child
+        PCB* temp = heap->data[currentIndex];
+        heap->data[currentIndex] = heap->data[smallest];
         heap->data[smallest] = temp;
 
-        // Move to the smallest child's position
-        i = smallest;
+        currentIndex = smallest; // Move to the smallest child
     }
 }
 
+
 void HeapFree(Heap* heap) {
-    free(heap->data);  // Deallocates the memory previously allocated by malloc to the data array in the heap
-    free(heap);  // Deallocates the memory previously allocated by malloc to the heap itself
+    if (!heap) return;
+    free(heap->data); // Deallocate the array of PCB pointers
+    free(heap);       // Deallocate the heap structure itself
 }
