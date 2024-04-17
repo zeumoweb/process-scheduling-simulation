@@ -76,10 +76,6 @@ PCB **sjf_preemptive(char *filename)
                 kill(process->process_id, SIGUSR2);
                 minHeap->arr[0] = minHeap->arr[minHeap->size - 1];
                 minHeap->size--;
-                for (int i = 0; i < minHeap->size; i++)
-                {
-                    printf("Process %d has remaining time %d\n", minHeap->arr[i].process_id, minHeap->arr[i].remaining_time);
-                }
                 heapifyDown(minHeap, 0);
                 process->completion_time = global_clock_sjf;
                 process->turnaround_time = process->completion_time - process->arrival_time;
