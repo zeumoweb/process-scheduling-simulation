@@ -7,9 +7,9 @@ PCB **sjf_preemptive(char *filename)
 {
     main_process_id_sjf = getpid();
 
-    HashMap *map = HashMapCreate();                      // Maps the process id to the index in the pcb_table
+    HashMap *map = HashMapCreate();                 // Maps the process id to the index in the pcb_table
     PCB **pcb_table = process_input_file(filename); // Load the tasks into memory
-    int num_tasks = getNumLinesInFile(filename);         // Get the number of tasks in the file
+    int num_tasks = getNumLinesInFile(filename);    // Get the number of tasks in the file
 
     MinHeap *minHeap = createMinHeap(num_tasks); // Initialize the min heap
 
@@ -52,12 +52,17 @@ PCB **sjf_preemptive(char *filename)
             int process_id = minHeap->arr[0].process_id;
             int process_index = HashMapGet(map, process_id);
             PCB *process = pcb_table[process_index];
+            if (process->remaining_time == process->burst_time)
+            {
+                process->response_time += global_clock_sjf - process->arrival_time;
+            }
 
             process->remaining_time -= 1;
             minHeap->arr[0].remaining_time -= 1;
             heapifyDown(minHeap, 0);
             global_clock_sjf += 1;
-            if (prev != process_id && prev != -1){
+            if (prev != process_id && prev != -1)
+            {
                 printf("Proceess %d was preempted at time %d\n", prev, global_clock_sjf);
             }
             prev = process_id;
@@ -71,7 +76,8 @@ PCB **sjf_preemptive(char *filename)
                 kill(process->process_id, SIGUSR2);
                 minHeap->arr[0] = minHeap->arr[minHeap->size - 1];
                 minHeap->size--;
-                for(int i = 0; i < minHeap->size; i++){
+                for (int i = 0; i < minHeap->size; i++)
+                {
                     printf("Process %d has remaining time %d\n", minHeap->arr[i].process_id, minHeap->arr[i].remaining_time);
                 }
                 heapifyDown(minHeap, 0);
