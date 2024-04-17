@@ -16,6 +16,7 @@ PCB **sjf_preemptive(char *filename)
     bubble_sort(pcb_table, num_tasks, map); // Sort the tasks based on arrival time and process ID
 
     int current_task = 0;
+    int prev = -1;
     while (isAllProcessesDone(pcb_table, num_tasks) == 0)
     {
         // Check all the processes that have arrived and add them to the priority queue
@@ -51,17 +52,28 @@ PCB **sjf_preemptive(char *filename)
             int process_id = minHeap->arr[0].process_id;
             int process_index = HashMapGet(map, process_id);
             PCB *process = pcb_table[process_index];
-            heapifyDown(minHeap, 0);
 
             process->remaining_time -= 1;
+            minHeap->arr[0].remaining_time -= 1;
+            heapifyDown(minHeap, 0);
             global_clock_sjf += 1;
+            if (prev != process_id && prev != -1){
+                printf("Proceess %d was preempted at time %d\n", prev, global_clock_sjf);
+            }
+            prev = process_id;
+            printf("Proceess %d is executing at time %d \n", process_id, global_clock_sjf);
 
             if (process->remaining_time <= 0)
             {
                 // Process has finished executing
+                printf("Proceess %d completed execution at time %d \n", process_id, global_clock_sjf);
+                prev = -1;
                 kill(process->process_id, SIGUSR2);
                 minHeap->arr[0] = minHeap->arr[minHeap->size - 1];
                 minHeap->size--;
+                for(int i = 0; i < minHeap->size; i++){
+                    printf("Process %d has remaining time %d\n", minHeap->arr[i].process_id, minHeap->arr[i].remaining_time);
+                }
                 heapifyDown(minHeap, 0);
                 process->completion_time = global_clock_sjf;
                 process->turnaround_time = process->completion_time - process->arrival_time;

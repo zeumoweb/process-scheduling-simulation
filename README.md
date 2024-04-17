@@ -1,3 +1,6 @@
+[Link to Youtube](https://youtu.be/kuxQ3QVEfbI)
+
+
 # CPU Process Scheduling Simulation
 
 ## Input Format
